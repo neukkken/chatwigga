@@ -129,13 +129,15 @@ io.on('connection', (socket) => {
   socket.emit('chat:ready', { ok: true, username: socket.user.username });
 });
 
+const rateLimitMax = Number(process.env.CHAT_RATE_LIMIT_MAX || 100);
+
 const chatLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 5,
+  max: Number.isFinite(rateLimitMax) ? rateLimitMax : 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-    error: 'Has excedido el limite de 5 mensajes por minuto. Por favor, espera.',
+    error: `Has excedido el limite de ${Number.isFinite(rateLimitMax) ? rateLimitMax : 100} mensajes por minuto. Por favor, espera.`,
   },
   keyGenerator: (req) => req.user?.username || req.ip,
 });
