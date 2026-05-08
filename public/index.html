@@ -190,7 +190,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const API_BASE = `${window.location.protocol}//${window.location.hostname}:3000`;
+      const API_BASE = '';
       const tokenKey = 'chat_token';
       const userKey = 'chat_user';
       let socket = null;
@@ -311,7 +311,7 @@
           socket.disconnect();
         }
 
-        socket = io(API_BASE, { auth: { token } });
+        socket = io({ auth: { token } });
 
         socket.on('message:new', (msg) => {
           appendMessage(msg);
