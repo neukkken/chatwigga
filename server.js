@@ -3,6 +3,7 @@ const http = require('http');
 const path = require('path');
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 const { Server } = require('socket.io');
@@ -10,7 +11,13 @@ require('dotenv').config();
 
 const app = express();
 const httpServer = http.createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: false,
+  },
+});
 const PORT = 3000;
 
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URL;
@@ -72,6 +79,7 @@ const User = mongoose.model('User', userSchema);
 const Message = mongoose.model('Message', messageSchema);
 
 app.use(express.json());
+app.use(cors({ origin: '*' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Token simple en memoria para prototipo.
@@ -269,6 +277,6 @@ app.post('/api/logout', authMiddleware, (req, res) => {
   return res.json({ ok: true });
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+httpServer.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor corriendo en http://0.0.0.0:${PORT}`);
 });
