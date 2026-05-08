@@ -190,7 +190,6 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const API_BASE = '';
       const tokenKey = 'chat_token';
       const userKey = 'chat_user';
       let socket = null;
@@ -342,7 +341,7 @@
           headers.Authorization = `Bearer ${token}`;
         }
 
-        const response = await fetch(`${API_BASE}${path}`, {
+        const response = await fetch(path, {
           ...options,
           headers,
         });
